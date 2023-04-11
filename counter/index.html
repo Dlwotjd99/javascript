@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<link rel="stylesheet" href="style.css">
+	<script>
+		const dateFormMaker = function () {
+					console.log(document.querySelector('#target-year-input').value)
+					console.log(document.querySelector('#target-month-input').value)
+					console.log(document.querySelector('#target-date-input').value)
+				};
+	</script>
+	<title>Dday-timer</title>
+</head>
+<body>
+	<h1>D-Day Counter</h1>
+	<input id="target-year-input" class="target-input"/>
+	<input id="target-monthj-input" class="target-input"/>
+	<input id="target-date-input" class="target-input"/>
+	<button onclick="dateFormMaker()">버튼</button>
+</body>
+</html>
