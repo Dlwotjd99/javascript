@@ -1,21 +1,63 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-	<link rel="stylesheet" href="style.css">
+	<title>D-day</title>
+	<link rel="stylesheet" href="./style.css">
 	<script>
 		const dateFormMaker = function () {
-					console.log(document.querySelector('#target-year-input').value)
-					console.log(document.querySelector('#target-month-input').value)
-					console.log(document.querySelector('#target-date-input').value)
-				};
+			const inputYear = document.querySelector('#target-year-input').value;
+			const inputMonth = document.querySelector('#target-month-input').value;
+			const inputDate = document.querySelector('#target-date-input').value;
+
+			const dateFormat = `${inputYear}-${inputMonth}-${inputDate}`
+
+			return dateFormat;
+		};
+
+		const counterMaker = function () {
+			const targetDateInput = dateFormMaker();
+			const nowDate = new Date();
+			const targetDate = new Date(targetDateInput).setHours(0, 0, 0, 0);
+			const remaining = (targetDate - nowDate) / 1000;
+
+			const remainingDate = Math.floor(remaining / 3600 / 24);
+			const remainingHours = Math.floor(remaining / 3600) % 24;
+			const remainingMin = Math.floor(remaining / 60) % 60;
+			const remainingSec = Math.floor(remaining) % 60;
+
+			console.log(remainingDate, remainingHours, remainingMin, remainingSec);
+		};
 	</script>
-	<title>Dday-timer</title>
 </head>
+
 <body>
-	<h1>D-Day Counter</h1>
-	<input id="target-year-input" class="target-input"/>
-	<input id="target-monthj-input" class="target-input"/>
-	<input id="target-date-input" class="target-input"/>
-	<button onclick="dateFormMaker()">버튼</button>
+	<h1>D-Day</h1>
+	<div id="d-day-container">
+		<div class="d-day-child-container">
+			<span id="days">0</span>
+			<span>일</span>
+		</div>
+		<div class="d-day-child-container">
+			<span id="hours">0</span>
+			<span>시간</span>
+		</div>
+		<div class="d-day-child-container">
+			<span id="min">0</span>
+			<span>분</span>
+		</div>
+		<div class="d-day-child-container">
+			<span id="sec">0</span>
+			<span>초</span>
+		</div>
+	</div>
+	<div id="target-selector">
+		<input id="target-year-input" class="target-input" /> -
+		<input id="target-month-input" class="target-input" /> -
+		<input id="target-date-input" class="target-input" />
+	</div>
+
+	<button onclick="counterMaker()" id="start-btn">카운트다운 시작</button>
 </body>
+
 </html>
