@@ -4,7 +4,7 @@
 <head>
 	<title>D-day</title>
 	<link rel="stylesheet" href="./style.css">
-	<script src="./script.js"></script>
+	<script src="./script.js" defer></script>
 </head>
 
 <body>
@@ -34,7 +34,8 @@
 		<input id="target-date-input" class="target-input" />
 	</div>
 
-	<button onclick="counterMaker()" id="start-btn">카운트다운 시작</button>
+	<button onclick="starter()" id="btn">카운트다운 시작</button>
+	<button onclick="setClearInterval()" id="btn">타이머 초기화</button>
 </body>
 
 </html>
