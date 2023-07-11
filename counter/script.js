@@ -1,9 +1,8 @@
 const messageContainer = document.querySelector("#d-day-message");
 const container = document.querySelector("#d-day-container");
-const intervalIdArr = []
+const savedDate = localStorage.getItem("saved-date");
 
-container.style.display = "none";
-messageContainer.innerHTML = "<h3>D-Day를 입력해 주세요.</h3>";
+const intervalIdArr = [];
 
 const dateFormMaker = function () {
   const inputYear = document.querySelector("#target-year-input").value;
@@ -14,22 +13,24 @@ const dateFormMaker = function () {
   return dateFormat;
 };
 
-const counterMaker = function () {
-  const targetDateInput = dateFormMaker();
+const counterMaker = function (data) {
+  if (data !== savedDate) {
+    localStorage.setItem("saved-date", data);
+  }
   const nowDate = new Date();
-  const targetDate = new Date(targetDateInput).setHours(0, 0, 0, 0);
+  const targetDate = new Date(data).setHours(0, 0, 0, 0);
   const remaining = (targetDate - nowDate) / 1000;
   if (remaining <= 0) {
     container.style.display = "none";
-    messageContainer.innerHTML= "<h3>타이머가 종료되었습니다.</h3>";
+    messageContainer.innerHTML = "<h3>타이머가 종료되었습니다.</h3>";
     messageContainer.style.display = "flex";
     setClearInterval();
     return;
   } else if (isNaN(remaining)) {
     container.style.display = "none";
     messageContainer.innerHTML = "<h3>유효한 시간대가 아닙니다.</h3>";
-   	messageContainer.style.display = "flex";
-     setClearInterval();
+    messageContainer.style.display = "flex";
+    setClearInterval();
     return;
   }
 
@@ -50,31 +51,53 @@ const counterMaker = function () {
   const timeKeys = Object.keys(remainingObj);
   const documentArr = ["days", "hours", "min", "sec"];
 
+  const format = function (time) {
+    if (time < 0) {
+      return "0" + time;
+    } else {
+      return time;
+    }
+  };
+
   let i = 0;
   for (let tag of documentArr) {
-    document.getElementById(tag).textContent = remainingObj[timeKeys[i]];
+    const remainingTime = format(remainingObj[timeKeys[i]]);
+    document.getElementById(tag).textContent = remainingTime;
     i++;
   }
-
-  /*documentObj['days'].textContent= remainingObj['remainingDate'];
-    documentObj['hours'].textContent= remainingObj['remainingHours'];
-    documentObj['min'].textContent= remainingObj['remainingMin'];
-    documentObj['sec'].textContent= remainingObj['remainingSec'];*/
 };
 
-const starter = function () { 
+const starter = function (targetDateInput) {
+  if (!targetDateInput) {
+    targetDateInput = dateFormMaker();
+  }
   container.style.display = "flex";
   messageContainer.style.display = "none";
-	counterMaker();
-	const intervalId = setInterval(counterMaker, 1000);
-	intervalIdArr.push(intervalId)
+  setClearInterval();
+  counterMaker(targetDateInput);
+  const intervalId = setInterval(() => {
+    counterMaker(targetDateInput);
+  }, 1000);
+  intervalIdArr.push(intervalId);
 };
 
-const setClearInterval= function() {
-  container.style.display='none';
-  messageContainer.innerHTML='<h3>D-Day를 입력해 주세요.</h3>'
-  messageContainer.style.display='flex';
-	for (let i = 0; i< intervalIdArr.length; i++){
-		clearInterval(intervalIdArr[i]);
-	}
+const setClearInterval = function () {
+  for (let i = 0; i < intervalIdArr.length; i++) {
+    clearInterval(intervalIdArr[i]);
+  }
 };
+
+const resetTimer = function () {
+  container.style.display = "none";
+  messageContainer.innerHTML = "<h3>D-Day를 입력해 주세요.</h3>";
+  messageContainer.style.display = "flex";
+  localStorage.removeItem("saved-date");
+  setClearInterval();
+};
+
+if (savedDate) {
+  starter(savedDate);
+} else {
+  container.style.display = "none";
+  messageContainer.innerHTML = "<h3>D-Day를 입력해 주세요.</h3>";
+}
