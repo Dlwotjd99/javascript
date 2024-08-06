@@ -53,7 +53,7 @@ const counterMaker = function (data) {
 
   const format = function (time) {
     if (time < 0) {
-      return "0" + time;
+      return '0' + time;
     } else {
       return time;
     }
